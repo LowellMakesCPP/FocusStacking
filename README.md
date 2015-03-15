@@ -18,7 +18,7 @@ Regards
 
 
 ### Links
-1. [Electron microscope, fitted for FocusStacking](http://www.savazzi.net/photography/mitutoyo_fs-60.htm)
+1. [Optical microscope, fitted for FocusStacking](http://www.savazzi.net/photography/mitutoyo_fs-60.htm)
 3. [Focus Stacking, Wikipedia](https://en.wikipedia.org/wiki/Focus_stacking)
 3. [Electon Microscope, Wikipedia](https://en.wikipedia.org/wiki/Electron_microscope)
 4. [STL file, Wolfram](http://reference.wolfram.com/language/ref/format/STL.html)

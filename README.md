@@ -7,7 +7,7 @@ The output of this program will be an STL file, which is an established vector b
 
 ![alt text](https://github.com/LowellMakesCPP/FocusStacking/raw/master/projectdiagram.png "Flowchart by Prakash Manandhar")
 
-__ImageServer:__ Stores sets of images called FocusStacks, and associated post-processing data from various sources. This component acts as a central repository of stacks and 
+__ImageServer:__ Stores sets of images called FocusStacks, and associated post-processing data from various sources. This component acts as a central repository of stacks.
 
 __AcquisitionSystem:__ Acquires data, controls hardware (e.g. stepper motors) and cameras and creates a package to be sent to ImageServer. If available, physical measurement units are also passed. A simpler acquisition system could use a human to load and identify images and set parameters.
 

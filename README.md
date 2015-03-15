@@ -5,6 +5,7 @@ The output of this program will be an STL file, which is a vector based 3D forma
 
 ### Project Components
 
+![alt text](https://github.com/LowellMakesCPP/FocusStacking/raw/master/projectdiagram.png "Flowchart by Prakash Manandhar")
 
 __ImageServer:__ Stores sets of images called FocusStacks, and associated post-processing data from various sources. This component acts as a central repository of stacks and 
 

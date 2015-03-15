@@ -1,7 +1,7 @@
 ## LowelMakes CPP Course Project: FocusStacking
 
 ### Purpose
-The output of this program will be an STL file, which is a vector based 3D format, which will represent the input a series of images taken from an electron microscope.  The intention is so that items of interest found with the electron microscope can be 3D printed, or saved and used for 3d modeling.
+The output of this program will be an STL file, which is an established vector based 3D file format.  The input will be a series of photos (focus stack), of an object identified on the electron microscope.  The intention is so that items of interest found with the electron microscope can be 3D printed, or saved and used for 3d modeling.
 
 ### Project Components
 

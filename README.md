@@ -16,6 +16,12 @@ __FocusProcessor:__ Post-processes data to label stacks, partially or fully. Can
 __3d processor:__ Uses post-processed data stored in server to display point-clouds or reconstructed surfaces in 3D. Can also export data in standard 3d formats to be printed.
 Regards
 
+### Example of a Focus Stack
+
+![alt text](http://i.stack.imgur.com/Xi1W3.jpg "Focus Detection in OpenCV")
+
+[Focus Detection using OpenCV - StackOverFlow](http://stackoverflow.com/questions/15260539/focus-detection-using-opencv)
+
 
 ### Links
 1. [Optical microscope, fitted for FocusStacking](http://www.savazzi.net/photography/mitutoyo_fs-60.htm)

@@ -20,7 +20,7 @@ Regards
 
 ![alt text](http://i.stack.imgur.com/Xi1W3.jpg "Focus Detection in OpenCV")
 
-[Focus Detection using OpenCV - StackOverFlow](http://stackoverflow.com/questions/15260539/focus-detection-using-opencv)
+[Focus Detection Example using OpenCV - StackOverFlow](http://stackoverflow.com/questions/15260539/focus-detection-using-opencv)
 
 
 ### Links

@@ -9,4 +9,6 @@ An `ImageServer` is a standalone executable server that that we plan to compile 
 
 The program has a command line and file log output and a settings file. Ideally, it will only use the standard C++ and boost libraries. However, if additional libraries required, we will cautiously add them.
 
-The `ImageServer` stores `FocusStack`s. A client can create, edit and add segmentation data to the stack. A client can also request `FocusStack` data. All data transfer occurs over the TCP/IP network sessions. When a client creates a new stack on the server, a new unique ID is created (random 64 bit numbers in hex format, make sure there is no clash). The stack also returns two keys to the server -- a read/write key and a read-only key.
+The `ImageServer` stores `FocusStack`s. A client can create, edit and add segmentation data to the stack. A client can also request `FocusStack` data. All data transfer occurs over the TCP/IP network sessions. When a client creates a new stack on the server, a new unique ID is created (random 64 bit numbers in hex format, make sure there is no clash). The stack also returns two keys to the server -- (1) a read/write key and, (2) a read-only key. The ID is unique to the server, but different servers can clash with each other.
+
+Each session is a separate thread or process. Only one client can have read/write access to a stack at a time.

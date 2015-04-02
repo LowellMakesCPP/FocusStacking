@@ -1,9 +1,30 @@
+#ifndef LMFS_IMAGESERVER_H
+#define LMFS_IMAGESERVER_H
+
+/*! \file ImageServer.h
+ *
+ * \brief Declarations for the focus-stack server.
+ * 
+ * \copyright Copyright 2015 Prakash Manandhar, Suraj Adhikari, 
+        Tyler Brown and Chris Fields. 
+ * \license This project is released under the GNU Public License.
+ */
+
+//! Namespace for Lowell-Makes C++ Course FocusStack project
 namespace LMFocusStack {
 
+	//! stores focus-stacks
 	class ImageServer {
 
-		int StartServer (int argc, char ** argv);
+	public:
+		/*!
+                 * Initialize image-server and parse parameters.
+                 */
+		ImageServer(int argc, char ** argv);
 
-	}
+		int start_server ();
+	};
 
-}
+} // end namespace LMFocusStack
+
+#endif

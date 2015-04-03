@@ -2,7 +2,7 @@ CC = g++
 CFLAGS = -g -Wall -std=c++11
 
 # localization file and language
-L10N_LANG = FRA #ENG
+L10N_LANG = DAN #ENG
 L10N_FILE = ResourceStr$(strip $(L10N_LANG)).inc
 
 all: ImageServerTest ImageServer

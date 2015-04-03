@@ -1,6 +1,8 @@
 #ifndef LMFS_IMAGESERVER_H
 #define LMFS_IMAGESERVER_H
 
+#include <string>
+
 /*! \file ImageServer.h
  *
  * \brief Declarations for the focus-stack server.
@@ -25,7 +27,11 @@ namespace LMFocusStack {
 		int start_server ();
 
 	private:
+		std::string settings_path_; // settings path
 		const char * def_settings_ = "FStk.ini";
+
+		//! could have been protected if we were writing an API
+		void load_settings();
 	};
 
 } // end namespace LMFocusStack

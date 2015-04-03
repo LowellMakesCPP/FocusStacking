@@ -1,2 +1,2 @@
 
-const std::string rstr_help = "message d'aide";
+const std::wstring rstr_help = L"message d'aide";

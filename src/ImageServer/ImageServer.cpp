@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <string>
 #include <fstream>
+#include <assert.h>
+#include <boost/filesystem.hpp>
 
 #define STR_EXPAND(tok) #tok
 #define STR(tok) STR_EXPAND(tok)
@@ -37,7 +39,7 @@ void FS::ImageServer::load_settings() {
 	std::ifstream fin;
 	fin.close();
 	try {
-		const int BUF_LEN = 4096;
+		const int BUF_LEN = 4096*2;
 		char buffer[BUF_LEN];
 		// try to open the settings file
 		fin.open(this->settings_path_);
@@ -49,9 +51,15 @@ void FS::ImageServer::load_settings() {
 		// read one line at a time
 		while (fin.good()) {
 			fin.getline(buffer, BUF_LEN);
+			load_settings_line(buffer, BUF_LEN);
 		}
 		
 	} catch (...) {
 		fin.close();
 	}
+}
+
+void FS::ImageServer::load_settings_line(const char * buf, const int N) {
+	assert( N > 0 );
+	
 }

@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -g -Wall -std=c++11
+CFLAGS = -g -Wall -std=c++11 -lboost_system
 
 # localization file and language
 L10N_LANG = DAN #ENG

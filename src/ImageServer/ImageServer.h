@@ -32,6 +32,7 @@ namespace LMFocusStack {
 
 		//! could have been protected if we were writing an API
 		void load_settings();
+		void load_settings_line(const char * buffer, const int LEN);
 	};
 
 } // end namespace LMFocusStack

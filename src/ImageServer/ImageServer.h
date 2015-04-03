@@ -23,6 +23,9 @@ namespace LMFocusStack {
 		ImageServer(int argc, char ** argv);
 
 		int start_server ();
+
+	private:
+		const char * def_settings_ = "FStk.ini";
 	};
 
 } // end namespace LMFocusStack

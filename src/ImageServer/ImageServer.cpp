@@ -6,9 +6,12 @@
 namespace FS = LMFocusStack;
 
 FS::ImageServer::ImageServer(int argc, char ** argv) {
-	//if (argc < 2) {
-		throw std::invalid_argument("Settings File Not Specified");
-	//} 
+	
+	if (argc < 2) { // settings file not specified, use default
+		
+	} else { // load settings or display help
+		
+	} 
 }
 
 int FS::ImageServer::start_server() {

@@ -19,6 +19,9 @@ namespace LMFocusStack {
 	class ImageServer {
 
 	public:
+
+		const char * program_version = "FSImServ 0.1"; 
+
 		/*!
                  * Initialize image-server and parse parameters.
                  */
@@ -33,6 +36,9 @@ namespace LMFocusStack {
 		//! could have been protected if we were writing an API
 		void load_settings();
 		void load_settings_line(const char * buffer, const int LEN);
+
+		// create default settings file if given file does not exist
+		void create_default_settings();
 	};
 
 } // end namespace LMFocusStack

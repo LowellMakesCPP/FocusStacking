@@ -1,8 +1,8 @@
 CC = g++
-CFLAGS = -g -Wall -std=c++11 -lboost_system
+CFLAGS = -g -Wall -std=c++11 -lboost_system -lboost_filesystem
 
 # localization file and language
-L10N_LANG = DAN #ENG
+L10N_LANG = ENG #DAN #FRA
 L10N_FILE = ResourceStr$(strip $(L10N_LANG)).inc
 
 all: ImageServerTest ImageServer

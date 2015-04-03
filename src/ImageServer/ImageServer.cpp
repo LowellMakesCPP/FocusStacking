@@ -6,12 +6,14 @@
 #include <fstream>
 #include <assert.h>
 #include <boost/filesystem.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #define STR_EXPAND(tok) #tok
 #define STR(tok) STR_EXPAND(tok)
  
 // example of a namespace alias
 namespace FS = LMFocusStack;
+namespace bfs = boost::filesystem;
 
 FS::ImageServer::ImageServer(int argc, char ** argv) {
 
@@ -37,11 +39,19 @@ int FS::ImageServer::start_server() {
 
 void FS::ImageServer::load_settings() {
 	std::ifstream fin;
-	fin.close();
+	#include STR(L10N_LANG)
 	try {
 		const int BUF_LEN = 4096*2;
 		char buffer[BUF_LEN];
-		// try to open the settings file
+		// check if file exists and is a regular file
+		// if file doesn't exist create a default file
+		bfs::path p (this->settings_path_);
+		if ( !bfs::exists(p) )
+			create_default_settings ();
+		if ( bfs::is_directory(p) ) 
+			throw std::invalid_argument (
+				rstr_dirNotFile + settings_path_ );
+ 	
 		fin.open(this->settings_path_);
 		if (!fin.good()) 
 			throw std::invalid_argument
@@ -55,11 +65,30 @@ void FS::ImageServer::load_settings() {
 		}
 		
 	} catch (...) {
-		fin.close();
+		fin.close(); 
+		// destruction of fin should also ensure clousure
+		// but just making sure
+		throw; // clean-up and re-throw
 	}
 }
 
 void FS::ImageServer::load_settings_line(const char * buf, const int N) {
 	assert( N > 0 );
 	
+}
+
+void FS::ImageServer::create_default_settings() {
+	using namespace boost::posix_time;
+	using namespace boost::gregorian;
+
+	ptime now = second_clock::local_time();
+
+	std::ofstream fout(settings_path_, std::ofstream::out);
+	
+	fout << "; Focus Stacking Image Server settings file V 1.0\n"
+		"; Automatically created by " << program_version << "\n"
+		"; " << 
+		"database = FSImSrvDb\n";
+
+	fout.close();
 }

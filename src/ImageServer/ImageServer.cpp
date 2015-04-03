@@ -4,8 +4,9 @@
 #include <stdexcept>
 #include <string>
 
-#define L10N_INC "ResourceStrFRA.inc"
-
+#define STR_EXPAND(tok) #tok
+#define STR(tok) STR_EXPAND(tok)
+ 
 // example of a namespace alias
 namespace FS = LMFocusStack;
 
@@ -15,7 +16,7 @@ FS::ImageServer::ImageServer(int argc, char ** argv) {
 	if (argc < 2) { // settings file not specified, use default
 		
 	} else { // load settings or display help
-		#include L10N_INC
+		#include STR(L10N_LANG)
 		if (argv[1] == help) {
 			std::cout << rstr_help << std::endl;
 		}

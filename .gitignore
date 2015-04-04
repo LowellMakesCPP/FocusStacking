@@ -1,3 +1,4 @@
 *.md~
 *.swp
 *.h~/src/ImageServer/FStk.ini
+/src/ImageServer/FStk.ini

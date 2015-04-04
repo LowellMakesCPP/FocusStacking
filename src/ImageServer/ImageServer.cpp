@@ -87,7 +87,7 @@ void FS::ImageServer::create_default_settings() {
 	
 	fout << "; Focus Stacking Image Server settings file V 1.0\n"
 		"; Automatically created by " << program_version << "\n"
-		"; " << 
+		"; " << to_simple_string(now) << std::endl <<
 		"database = FSImSrvDb\n";
 
 	fout.close();

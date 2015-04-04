@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <boost/filesystem.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/regex.hpp>
 
 #define STR_EXPAND(tok) #tok
 #define STR(tok) STR_EXPAND(tok)
@@ -74,6 +75,24 @@ void FS::ImageServer::load_settings() {
 
 void FS::ImageServer::load_settings_line(const char * buf, const int N) {
 	assert( N > 0 );
+	//std::cout << "Reading line: " << buf << std::endl;
+	const boost::regex re_comment("^[[:space:]]*;");
+	const boost::regex re_dbpath ( 
+		"^([[:space:]]*database[[:space:]]=[[:space:]]*)");
+	boost::smatch str_matches; 
+	if ( boost::regex_search(std::string(buf), 
+				str_matches, re_comment) ) {
+		//std::cout << "Comment found\n";
+		return;
+	}
+	if ( boost::regex_search(std::string(buf), 
+				str_matches, re_dbpath) ) {
+		//std::cout << "Comment found\n";
+		db_path_ = buf + str_matches[0].length(); 
+		std::cout << "Setting database path to: " 
+			  << db_path_ << std::endl;
+		return;
+	}
 	
 }
 

@@ -33,6 +33,9 @@ namespace LMFocusStack {
 		std::string settings_path_; // settings path
 		const char * def_settings_ = "FStk.ini";
 
+		// database path, note that it is initialized to empty
+		std::string db_path_; 
+
 		//! could have been protected if we were writing an API
 		void load_settings();
 		void load_settings_line(const char * buffer, const int LEN);

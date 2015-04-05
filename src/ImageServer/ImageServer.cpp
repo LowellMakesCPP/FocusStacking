@@ -18,6 +18,9 @@ namespace bfs = boost::filesystem;
 
 FS::ImageServer::ImageServer(int argc, char ** argv) {
 
+  // Task 1: exit after help. Insert a flag after help, if that
+  // flag exists then exit the program in main; return 0.
+
 	const std::string help = "--help";
 	if (argc < 2) 
 	{ // settings file not specified, use default
@@ -27,6 +30,8 @@ FS::ImageServer::ImageServer(int argc, char ** argv) {
 		if (argv[1] == help) {
 			#include STR(L10N_LANG)
 			std::wcout << rstr_help << std::endl;
+			throw std::invalid_argument
+			  ("End of help docs\n");
 		} else {
 			settings_path_ = argv[1];
 		}

@@ -15,6 +15,9 @@
 //! Namespace for Lowell-Makes C++ Course FocusStack project
 namespace LMFocusStack {
 
+	//! processes help message
+
+
 	//! stores focus-stacks
 	class ImageServer {
 

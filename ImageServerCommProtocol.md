@@ -23,6 +23,11 @@ In the following definitions, Cl represents a message from client to server, whi
 3. **PING**: ping server. Client requests server for identification. Server returns version and database information. Example: Cl"_\000PING\004_" Se"_\000PING FocusStacking ImageServer version 0.1 \nDatabase: Microscopy Collection\004_".
 4. **LSTN**: number of stacks currently in database. Client requests server for list of stacks stored in the database. Server returns number in lowercase hexadecimal. . For example if there are 29 stacks, the communication could look like: Cl"_\000LSTN\004_" Se"_\000LSTN1d\004_". If there aren't any stacks in the database yet, the server should return: Se"_\000LSTN0\004_" where '0' after LSTN is the ASCII character '\060'.
 5. **LSTK**:  returns UUIDs n stacks starting at the kth stack in server. Client sends k as a hexadecimal number starting from 0 followed by a comma and number of stacks to return, again as a hexadecimal number. Server returns empty if there are less than (k-1) stacks currently in server. The stacks are sorted by UUID for the purpose of indexing. The stack ids are juxtaposed. The maximum number of stack ids a client can request at a time is 10240/32 = 320.
-
+6. **UUNM**: returns name of stack identified by given UUID. If stack cannot be found in database returns empty. Client send 32 UUID as message data. Server sends 32 UUID followed by 3 characters denoting encoding, followed by name. The encoding can be as follows:
+   1. **ASC**: 8-bit ascii
+   2. **U08**: UTF-8
+   3. **U16**: UTF-16
+   4. **U32**: UTF-32
+7. **UUDS**:
 
 

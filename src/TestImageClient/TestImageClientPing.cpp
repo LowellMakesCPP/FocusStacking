@@ -9,18 +9,21 @@ using boost::asio::ip::tcp;
 enum { max_length = (10240 + 100) };
 
 std::string 
-parse_ping_reply (char * reply) {
+parse_ping_reply (char * reply, size_t reply_length, 
+	bool &start_found, bool &end_found) {
 
 	std::string s;
-	bool message_start = false; 
-	for(int i = 0; i < max_length; i++)
+	for(size_t i = 0; i < reply_length; i++)
 	{
-		if (!message_start) {
+		if (!start_found) {
 			if (reply[i] == '\000')
-				message_start = true;
+				start_found = true;
 			continue;
 		}
-		if (reply[i] == '\004') break; // message end
+		if (reply[i] == '\004') {
+			end_found = true;
+			break; // message end
+		}
 		s += reply[i];
 	}
 	return reply;
@@ -49,9 +52,15 @@ int main(int argc, char* argv[])
     boost::asio::write(s, boost::asio::buffer(request, request_length));
 
     char reply[max_length];
-    size_t reply_length = boost::asio::read(s,
+    bool start_found = false;
+    bool end_found = false;
+    std::string rs;
+    while ( ! end_found ) {
+    	size_t reply_length = boost::asio::read(s,
         boost::asio::buffer(reply, request_length));
-    std::string rs = parse_reply(reply);
+    	rs += parse_ping_reply(reply, reply_length, 
+		start_found, end_found);
+    }
     std::cout << rs << "\n";
   }
   catch (std::exception& e)

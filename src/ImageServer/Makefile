@@ -17,6 +17,7 @@ ImageServer: ImageServer.cpp ImageServer.h
 			-c ImageServer.cpp -o ImageServer.o
 
 ImageServerTest: ImageServer ImageServerTest.cpp
-	$(CC) $(CFLAGS) ImageServerTest.cpp ImageServer.o -o ImageServerTest
+	$(CC) $(CFLAGS) -DL10N_LANG=$(L10N_FILE) \
+	ImageServerTest.cpp ImageServer.o -o ImageServerTest
 
 

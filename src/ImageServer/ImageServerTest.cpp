@@ -1,24 +1,45 @@
 #include <iostream>
 #include "ImageServer.h"
+#include <boost/filesystem.hpp>
+
+#define STR_EXPAND(tok) #tok
+#define STR(tok) STR_EXPAND(tok)
+
+namespace bfs = boost::filesystem;
 
 // PManandhar note: not preferred, used for demo
 // or short files
 using namespace LMFocusStack;
 using namespace std;
 
-int main(int argc, char ** argv) {
-
-  try {
-	ImageServer server(argc, argv);
-
-	return 0;
-	
+int options(char ** argv) {
+  // Task 1.1: exit after help. Insert a flag after help, if that
+  // flag exists then exit the program in main; return 0.
+  // (Try to do this in the main function)
+  
+  const std::string help = "--help";
+  if (argv[1] == help) {
+    #include STR(L10N_LANG)
+    std::wcout << rstr_help << std::endl;
+    return -1;
   }
-  catch (exception &e) {
-    // Tyler note: http://isocpp.org/wiki/faq/exceptions#ctors-can-throw
-        std::cerr << "Program closing: " << e.what();
-        return -1;
+  else {
+    return 0;
   }
- 
 }
 
+int main(int argc, char ** argv) {
+  
+  if (options(argv) == -1){
+    std::cout << "Program closing" << std::endl;
+
+    return -1;
+    
+  }
+  else {
+    ImageServer server(argc, argv);
+    
+    return 0;
+  }
+    
+}

@@ -11,6 +11,7 @@ Reference: [TCP/IP Protocol Design: Message Framing, by **Stephen Cleary**, 25 J
 6. The same message id can be used for the query or request and reply from server
 
 Databases and stacks:
+
 7. A server only serves one database at a time.
 8. A host may serve multiple databases at the same time by operating multiple servers at different ports.
 9. Databases have unique ids (preferably global by using UUIDs), and an identifying name and description. Database names can be up to 256 [32-bit unicode](http://en.wikipedia.org/wiki/UTF-32) characters long. Descriptions can be up to 2048 32-bit unicode characters long.

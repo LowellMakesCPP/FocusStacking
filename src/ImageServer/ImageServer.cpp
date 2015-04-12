@@ -105,3 +105,12 @@ void FS::ImageServer::create_default_settings() {
 
 	fout.close();
 }
+
+/* TODO: review blocking_tcp_echo_server.cpp and add echo server
+         methods to interface with ping client example.
+*/
+
+void FS::ImageServer::session(socket_ptr sock)
+{
+  break;
+}

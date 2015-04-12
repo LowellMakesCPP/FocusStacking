@@ -1,11 +1,8 @@
 #include <iostream>
 #include "ImageServer.h"
-#include <boost/filesystem.hpp>
 
 #define STR_EXPAND(tok) #tok
 #define STR(tok) STR_EXPAND(tok)
-
-namespace bfs = boost::filesystem;
 
 // PManandhar note: not preferred, used for demo
 // or short files
@@ -30,7 +27,7 @@ int options(char ** argv) {
 
 int main(int argc, char ** argv) {
   
-  if (options(argv) == -1){
+  if (argc >= 2 && options(argv) == -1){
     std::cout << "Program closing" << std::endl;
 
     return -1;

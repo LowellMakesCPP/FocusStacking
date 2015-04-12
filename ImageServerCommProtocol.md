@@ -14,7 +14,11 @@ Databases and stacks:
 
 7. A server only serves one database at a time.
 8. A host may serve multiple databases at the same time by operating multiple servers at different ports.
-9. Databases have unique ids (preferably global by using UUIDs), and an identifying name and description. Database names can be up to 256 [32-bit unicode](http://en.wikipedia.org/wiki/UTF-32) characters long. Descriptions can be up to 2048 32-bit unicode characters long.
+9. Databases have unique ids (preferably global by using UUIDs), and an identifying name and description. Database names can be up to 256 [32-bit unicode](http://en.wikipedia.org/wiki/UTF-32) characters long. Descriptions can be up to 2048 32-bit unicode characters long. Names and descriptions will be stored and transmitted as 3 digit encoding followed by hex characters. The encoding can be as follows:
+   1. **ASC**: 8-bit ascii
+   2. **U08**: UTF-8
+   3. **U16**: UTF-16
+   4. **U32**: UTF-32
 10. A database can hold up to 2^32 = 4294967296 stacks.
 
 In the following definitions, Cl represents a message from client to server, while Se represents a message from server to client. The following messages are defined:
@@ -23,11 +27,7 @@ In the following definitions, Cl represents a message from client to server, whi
 3. **PING**: ping server. Client requests server for identification. Server returns version and database information. Example: Cl"_\000PING\004_" Se"_\000PING FocusStacking ImageServer version 0.1 \nDatabase: Microscopy Collection\004_".
 4. **LSTN**: number of stacks currently in database. Client requests server for list of stacks stored in the database. Server returns number in lowercase hexadecimal. . For example if there are 29 stacks, the communication could look like: Cl"_\000LSTN\004_" Se"_\000LSTN1d\004_". If there aren't any stacks in the database yet, the server should return: Se"_\000LSTN0\004_" where '0' after LSTN is the ASCII character '\060'.
 5. **LSTK**:  returns UUIDs n stacks starting at the kth stack in server. Client sends k as a hexadecimal number starting from 0 followed by a comma and number of stacks to return, again as a hexadecimal number. Server returns empty if there are less than (k-1) stacks currently in server. The stacks are sorted by UUID for the purpose of indexing. The stack ids are juxtaposed. The maximum number of stack ids a client can request at a time is 10240/32 = 320.
-6. **UUNM**: returns name of stack identified by given UUID. If stack cannot be found in database returns empty. Client send 32 UUID as message data. Server sends 32 UUID followed by 3 characters denoting encoding, followed by name. The encoding can be as follows:
-   1. **ASC**: 8-bit ascii
-   2. **U08**: UTF-8
-   3. **U16**: UTF-16
-   4. **U32**: UTF-32
+6. **UUNM**: returns name of stack identified by given UUID. If stack cannot be found in database returns empty. Client send 32 UUID as message data. Server sends 32 UUID followed by 3 characters denoting encoding, followed by name.
 7. **UUDS**:
 
 

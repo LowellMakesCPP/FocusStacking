@@ -15,12 +15,16 @@
 //! Namespace for Lowell-Makes C++ Course FocusStack project
 namespace LMFocusStack {
 
+	//! processes help message
+
+
 	//! stores focus-stacks
 	class ImageServer {
 
 	public:
 
-		const char * program_version = "FSImServ 0.1"; 
+		const char * program_version = "FSImServ 0.1";
+		enum { max_msg_len = (10240 + 100) }; 
 
 		/*!
                  * Initialize image-server and parse parameters.

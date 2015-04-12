@@ -29,6 +29,8 @@ FS::ImageServer::ImageServer(int argc, char ** argv) {
 }
 
 int FS::ImageServer::start_server() {
+	using boost::asio::ip::tcp;
+	
 	return 0;
 }
 

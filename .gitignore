@@ -3,3 +3,4 @@
 *.h~/src/ImageServer/FStk.ini
 /src/ImageServer/FStk.ini
 /src/TestImageClient/TestImageClient
+/src/TestImageClient/TestImageClientPing

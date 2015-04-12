@@ -14,7 +14,7 @@ Databases and stacks:
 
 7. A server only serves one database at a time.
 8. A host may serve multiple databases at the same time by operating multiple servers at different ports.
-9. Databases have unique ids (preferably global by using UUIDs), and an identifying name and description. Database names can be up to 256 [32-bit unicode](http://en.wikipedia.org/wiki/UTF-32) characters long. Descriptions can be up to 2048 32-bit unicode characters long. Names and descriptions will be stored and transmitted as 3 digit encoding followed by hex characters. The encoding can be as follows:
+9. Databases have unique ids (preferably global by using UUIDs), and an identifying name and description. Database names can be up to 256 [32-bit unicode](http://en.wikipedia.org/wiki/UTF-32) characters long. Descriptions can be up to 1024 32-bit unicode characters long. Names and descriptions will be stored and transmitted as 3 digit encoding followed by hex characters. The encoding can be as follows:
    1. **ASC**: 8-bit ascii
    2. **U08**: UTF-8
    3. **U16**: UTF-16

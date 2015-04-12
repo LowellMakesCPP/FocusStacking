@@ -8,6 +8,9 @@
 #include <boost/filesystem.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/regex.hpp>
+#include <boost/asio.hpp>
+// #include <boost/thread/thread.hpp>
+#include <thread>
 
 #define STR_EXPAND(tok) #tok
 #define STR(tok) STR_EXPAND(tok)
@@ -30,6 +33,10 @@ FS::ImageServer::ImageServer(int argc, char ** argv) {
 
 int FS::ImageServer::start_server() {
 	using boost::asio::ip::tcp;
+
+	boost::asio::io_service io_service;
+
+	server_(io_service, port_);
 	
 	return 0;
 }
@@ -75,6 +82,8 @@ void FS::ImageServer::load_settings_line(const char * buf, const int N) {
 	const boost::regex re_comment("^[[:space:]]*;");
 	const boost::regex re_dbpath ( 
 		"^([[:space:]]*database[[:space:]]=[[:space:]]*)");
+	const boost::regex re_port (
+		"^([[:space:]]*port[[:space:]]*)");
 	boost::smatch str_matches; 
 	if ( boost::regex_search(std::string(buf), 
 				str_matches, re_comment) ) {
@@ -89,7 +98,11 @@ void FS::ImageServer::load_settings_line(const char * buf, const int N) {
 			  << db_path_ << std::endl;
 		return;
 	}
-	
+	if (boost::regex_search(std::string(buf),
+				str_matches, re_port) ) {
+	  port_ = std::atoi(buf + str_matches[0].length());
+	  return;
+	}
 }
 
 void FS::ImageServer::create_default_settings() {
@@ -103,7 +116,9 @@ void FS::ImageServer::create_default_settings() {
 	fout << "; Focus Stacking Image Server settings file V 1.0\n"
 		"; Automatically created by " << program_version << "\n"
 		"; " << to_simple_string(now) << std::endl <<
-		"database = FSImSrvDb\n";
+		"database = FSImSrvDb\n"
+	  "port = 8080\n";
+	
 
 	fout.close();
 }
@@ -111,8 +126,43 @@ void FS::ImageServer::create_default_settings() {
 /* TODO: review blocking_tcp_echo_server.cpp and add echo server
          methods to interface with ping client example.
 */
-
-void FS::ImageServer::session(socket_ptr sock)
+std::map<std::thread::id, FS::ImageServer::state_t> * FS::ImageServer::state_map_
+= new std::map<std::thread::id, FS::ImageServer::state_t>();
+using boost::asio::ip::tcp;
+void FS::ImageServer::session_(tcp::socket sock)
 {
-  break;
+  const std::thread::id tid = std::this_thread::get_id();
+  state_t state = waiting_for_start;
+  state_map_->insert(std::pair<std::thread::id, state_t>(tid,state));
+  for(;;)
+    {
+      char data[max_msg_len];
+
+      boost::system::error_code error;
+      size_t length = sock.read_some(boost::asio::buffer(data), error);
+      if (error == boost::asio::error::eof)
+	break; // Connection closed cleanly by peer.
+      else if (error)
+	throw boost::system::system_error(error); // Some other error.
+
+    }
+  
 }
+
+void FS::ImageServer::server_(boost::asio::io_service& io_service,
+			      unsigned short port)
+{
+  tcp::acceptor a(io_service, tcp::endpoint(tcp::v4(), port));
+  for (;;)
+  {
+    tcp::socket sock(io_service);
+    a.accept(sock);
+    std::thread(session_, std::move(sock)).detach();
+  }
+}
+
+void FS::ImageServer::detect_start_msg_(char * data, size_t length)
+{
+  
+}
+

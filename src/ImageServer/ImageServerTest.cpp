@@ -35,6 +35,8 @@ int main(int argc, char ** argv) {
   }
   else {
     ImageServer server(argc, argv);
+
+    server.start_server();
     
     return 0;
   }

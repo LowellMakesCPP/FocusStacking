@@ -23,13 +23,15 @@ Databases and stacks:
 
 Each stack holds the following information:
 
-1. A series of source images in JPEG or TIFF format
+1. A series of source images in JPEG or TIFF format (each image can be a maximum of 1GB) and a stack can hold at most 10,000 images
 2. Meta-information about the focal distance of each image if available, or NA if not available
 3. Units for distance information (um, mm, cm, m, km, in, ft, mile)
 4. X and Y scale information if available
 5. Units for X and Y scale information if available
-6. Information on originator
-7. 
+6. Information on creator (name, i.p., date-time)
+7. a set of focal maps
+
+
 
 In the following definitions, Cl represents a message from client to server, while Se represents a message from server to client. The following messages are defined:
 

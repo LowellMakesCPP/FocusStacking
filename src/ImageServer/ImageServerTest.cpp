@@ -34,10 +34,19 @@ int main(int argc, char ** argv) {
     
   }
   else {
-    ImageServer server(argc, argv);
 
-    server.start_server();
+    try
+      {
+	ImageServer server(argc, argv);
+
+	server.start_server();
     
+      }
+    catch (std::exception& e)
+      {
+	std::cerr << "Exception: " << e.what() << "\n";
+      }
+
     return 0;
   }
     

@@ -31,14 +31,14 @@ FS::ImageServer::ImageServer(int argc, char ** argv) {
 	load_settings(); // could throw invalid settings exception
 }
 
-int FS::ImageServer::start_server() {
+void FS::ImageServer::start_server() {
 	using boost::asio::ip::tcp;
 
 	boost::asio::io_service io_service;
 
 	server_(io_service, port_);
 	
-	return 0;
+	io_service.run();
 }
 
 void FS::ImageServer::load_settings() {

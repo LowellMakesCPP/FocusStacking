@@ -31,14 +31,15 @@ FS::ImageServer::ImageServer(int argc, char ** argv) {
 	load_settings(); // could throw invalid settings exception
 }
 
-int FS::ImageServer::start_server() {
+void FS::ImageServer::start_server() {
 	using boost::asio::ip::tcp;
 
 	boost::asio::io_service io_service;
 
 	server_(io_service, port_);
 	
-	return 0;
+	io_service.run();
+	
 }
 
 void FS::ImageServer::load_settings() {
@@ -143,6 +144,7 @@ void FS::ImageServer::session_(tcp::socket sock)
       if (error == boost::asio::error::eof)
 	break; // Connection closed cleanly by peer.
       else if (error)
+    
 	throw boost::system::system_error(error); // Some other error.
 
     }
@@ -163,6 +165,11 @@ void FS::ImageServer::server_(boost::asio::io_service& io_service,
 
 void FS::ImageServer::detect_start_msg_(char * data, size_t length)
 {
-  
+  if (data[0] == 'a'){
+    std::cout << "hello world\n";
+  }
+  else {
+    std::cout << "pulse!\n";
+  }
 }
 

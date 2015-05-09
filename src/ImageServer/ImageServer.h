@@ -35,7 +35,7 @@ namespace LMFocusStack {
                  */
 		ImageServer(int argc, char ** argv);
 
-		int start_server ();
+		void start_server ();
 
 	private:
 		std::string settings_path_; // settings path

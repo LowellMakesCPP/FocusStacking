@@ -32,13 +32,16 @@ FS::ImageServer::ImageServer(int argc, char ** argv) {
 }
 
 void FS::ImageServer::start_server() {
+	std::cout << "Starting server at " << port_ 
+			<< " ..." << std::endl;
 	using boost::asio::ip::tcp;
 
 	boost::asio::io_service io_service;
 
 	server_(io_service, port_);
-	
-	io_service.run();
+
+	// io_service.run might not be needed for blocking sever
+	//io_service.run();
 	
 }
 
@@ -84,7 +87,7 @@ void FS::ImageServer::load_settings_line(const char * buf, const int N) {
 	const boost::regex re_dbpath ( 
 		"^([[:space:]]*database[[:space:]]=[[:space:]]*)");
 	const boost::regex re_port (
-		"^([[:space:]]*port[[:space:]]*)");
+		"^([[:space:]]*port[[:space:]]=[[:space:]]*)");
 	boost::smatch str_matches; 
 	if ( boost::regex_search(std::string(buf), 
 				str_matches, re_comment) ) {
@@ -127,8 +130,10 @@ void FS::ImageServer::create_default_settings() {
 /* TODO: review blocking_tcp_echo_server.cpp and add echo server
          methods to interface with ping client example.
 */
-std::map<std::thread::id, FS::ImageServer::state_t> * FS::ImageServer::state_map_
-= new std::map<std::thread::id, FS::ImageServer::state_t>();
+std::map<std::thread::id, FS::ImageServer::state_t> * 
+	FS::ImageServer::state_map_
+	= new std::map<std::thread::id, FS::ImageServer::state_t>();
+
 using boost::asio::ip::tcp;
 void FS::ImageServer::session_(tcp::socket sock)
 {
@@ -140,6 +145,7 @@ void FS::ImageServer::session_(tcp::socket sock)
       char data[max_msg_len];
 
       boost::system::error_code error;
+      std::cout << "Waiting to read some bytes from client" << std::endl;
       size_t length = sock.read_some(boost::asio::buffer(data), error);
       if (error == boost::asio::error::eof)
 	break; // Connection closed cleanly by peer.
@@ -147,6 +153,7 @@ void FS::ImageServer::session_(tcp::socket sock)
     
 	throw boost::system::system_error(error); // Some other error.
 
+	boost::asio::write(sock, boost::asio::buffer(data, length));
     }
   
 }

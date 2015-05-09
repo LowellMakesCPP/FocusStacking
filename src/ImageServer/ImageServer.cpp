@@ -199,6 +199,7 @@ void FS::ImageServer::process_ping_(tcp::socket& sock)
 // Using for not echo example
 void FS::ImageServer::session_(tcp::socket sock)
 {
+  try {
   // get id for the current thread
   const std::thread::id tid = std::this_thread::get_id();
   // when a new connection starts, it's waiting for the start of packet
@@ -239,6 +240,11 @@ void FS::ImageServer::session_(tcp::socket sock)
       }
       //boost::asio::write(sock, boost::asio::buffer(data, length));
 	
+    }
+  }
+  catch(std::exception& e)
+    {
+      std::cerr << "Exception: " << e.what() << std::endl;
     }
   
 }

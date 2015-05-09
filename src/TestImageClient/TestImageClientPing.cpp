@@ -48,8 +48,8 @@ int main(int argc, char* argv[])
     const char * request = "\002PING\003";
     size_t request_length = std::strlen(request);
     std::cout << "Sending PING to " 
-	<< argv[1] << ": " << argv[2] << std::endl
-	<< "Length is " << request_length << std::endl;
+	<< argv[1] << ": " << argv[2]
+	<< ", Length is " << request_length << std::endl;
     boost::asio::write(s, boost::asio::buffer(request, request_length));
 
     char reply[max_length];
@@ -61,14 +61,18 @@ int main(int argc, char* argv[])
         boost::asio::buffer(reply, request_length));
 	rs += parse_ping_reply(reply, reply_length, 
 		start_found, end_found);
-	std::cout << "Reply length is " << reply_length << std::endl;
-	std::cout 
-		<< "Found: " << rs 
-		<< " Start: " << start_found 
-		<< " End: " << end_found << std::endl;
+	//std::cout << "Reply length is " << reply_length << std::endl;
+
 	}
+    //std::cout 
+    //  << "Found: " << rs 
+    //  << " Start: " << start_found 
+    //  << " End: " << end_found << std::endl;
+
+    // print out the ping 
     std::cout << rs << "\n";
   }
+  
   catch (std::exception& e)
   {
     std::cerr << "Exception: " << e.what() << "\n";

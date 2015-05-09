@@ -38,7 +38,7 @@ namespace LMFocusStack {
 		void start_server ();
 
 	private:
-		std::string settings_path_; // settings path
+		static std::string settings_path_; // settings path
 		const char * def_settings_ = "FStk.ini";
 
 		// database path, note that it is initialized to empty
@@ -79,7 +79,15 @@ namespace LMFocusStack {
 		static void parse_frame_id_(char * data,
 					   FrameReadState *);
 
-		static void process_ping_(boost::asio::ip::tcp::socket&);
+		static void db_logic_(boost::asio::ip::tcp::socket&,
+				      FrameReadState *);
+		// PING
+		static void
+		  process_ping_(boost::asio::ip::tcp::socket&);
+
+		// GTID
+		static void
+		  create_new_stack_(boost::asio::ip::tcp::socket&);
 
 		static state_t get_state_();
 		static void set_state_(state_t);

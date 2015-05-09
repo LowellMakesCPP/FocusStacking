@@ -132,7 +132,8 @@ std::map<std::thread::id, FS::ImageServer::state_t> *
 	= new std::map<std::thread::id, FS::ImageServer::state_t>();
 
 using boost::asio::ip::tcp;
-void FS::ImageServer::session_(tcp::socket sock)
+// Using for echo example
+/*void FS::ImageServer::session_(tcp::socket sock)
 {
   const std::thread::id tid = std::this_thread::get_id();
   state_t state = waiting_for_start;
@@ -154,6 +155,46 @@ void FS::ImageServer::session_(tcp::socket sock)
     }
   
 }
+*/
+
+FS::ImageServer::state_t FS::ImageServer::get_state_()
+{
+  const std::thread::id tid = std::this_thread::get_id();
+  
+  return (*state_map_)[tid];
+}
+
+// Using for not echo example
+void FS::ImageServer::session_(tcp::socket sock)
+{
+  // get id for the current thread
+  const std::thread::id tid = std::this_thread::get_id();
+  // when a new connection starts, it's waiting for the start of packet
+  state_t state = waiting_for_start;
+  state_map_->insert(std::pair<std::thread::id, state_t>(tid,state));
+  // read bytes until EOF
+  for(;;)
+    {
+      char data[max_msg_len];
+
+      boost::system::error_code error;
+      size_t length = sock.read_some(boost::asio::buffer(data), error);
+      std::cout << "Read " << length << " bytes from client" << std::endl;
+      if (error == boost::asio::error::eof)
+	break; // Connection closed cleanly by peer.
+      else if (error)
+    
+	throw boost::system::system_error(error); // Some other error.
+
+      if (get_state_() == waiting_for_start) {
+	detect_start_msg_(data, length);
+	
+      }
+      //boost::asio::write(sock, boost::asio::buffer(data, length));
+	
+    }
+  
+}
 
 void FS::ImageServer::server_(boost::asio::io_service& io_service,
 			      unsigned short port)
@@ -163,17 +204,13 @@ void FS::ImageServer::server_(boost::asio::io_service& io_service,
   {
     tcp::socket sock(io_service);
     a.accept(sock);
+    // starting a new thread here
     std::thread(session_, std::move(sock)).detach();
   }
 }
 
 void FS::ImageServer::detect_start_msg_(char * data, size_t length)
 {
-  if (data[0] == 'a'){
-    std::cout << "hello world\n";
-  }
-  else {
-    std::cout << "pulse!\n";
-  }
+
 }
 

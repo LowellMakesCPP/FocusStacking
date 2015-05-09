@@ -65,6 +65,8 @@ namespace LMFocusStack {
 
 		static std::map<std::thread::id, state_t> * state_map_;
 		void detect_start_msg_(char *, size_t length);
+
+		state_t get_state_();
 		
 	};
 

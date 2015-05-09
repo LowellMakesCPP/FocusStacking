@@ -20,6 +20,8 @@ int main(int argc, char ** argv) {
 		tcp::resolver::iterator iterator = resolver.resolve(query);
 		
 		tcp::socket socket(io_service);
+
+		std::cout << "Connection succeeded\n";
 		
 		return 0;
 	}

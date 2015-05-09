@@ -6,10 +6,12 @@ CFLAGS += -lboost_regex -pthread
 all: TestImageClient TestImageClientPing
 
 clean:
-	rm TestImageClient TestImageClientPing
+	rm TestImageClient TestImageClientPing TestImageClientPing2
 
 TestImageClient: TestImageClient.cpp
 	$(CC) $(CFLAGS) TestImageClient.cpp -o TestImageClient
 
 TestImageClientPing: TestImageClientPing.cpp
 	$(CC) $(CFLAGS) TestImageClientPing.cpp -o TestImageClientPing
+
+

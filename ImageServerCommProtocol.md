@@ -4,9 +4,9 @@
 Reference: [TCP/IP Protocol Design: Message Framing, by **Stephen Cleary**, 25 Jun 2009](http://www.codeproject.com/Articles/37496/TCP-IP-Protocol-Design-Message-Framing)
 
 1. Messages are encoded in [ASCII](http://en.wikipedia.org/wiki/ASCII), binary data are encoded in hex within a message.
-2. Each message unit starts with a NUL (Acsii code: 000) character followed by a four character message code (case sensitive), followed by data that depends on the message.
-3. Each message ends with a ETX (Ascii code: 004, End of Transmission).
-4. Data can never contain the characters NUL or ETX.
+2. Each message unit starts with a STX (Acsii code: 002) character followed by a four character message code (case sensitive), followed by data that depends on the message.
+3. Each message ends with a ETX (Ascii code: 003, End of Text).
+4. Data can never contain the characters STX or ETX.
 5. Message data are at most 10240 bytes (= 10 KB) in length. Longer data transfers need to be split into multiple fragments.
 6. The same message id can be used for the query or request and reply from server
 

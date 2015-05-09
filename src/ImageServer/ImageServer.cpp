@@ -19,6 +19,8 @@
 namespace FS = LMFocusStack;
 namespace bfs = boost::filesystem;
 
+using FS::ImageServer;
+
 FS::ImageServer::ImageServer(int argc, char ** argv) {
   
 	if (argc < 2) 
@@ -160,9 +162,39 @@ using boost::asio::ip::tcp;
 FS::ImageServer::state_t FS::ImageServer::get_state_()
 {
   const std::thread::id tid = std::this_thread::get_id();
-  
   return (*state_map_)[tid];
 }
+
+void FS::ImageServer::set_state_(state_t st)
+{
+  const std::thread::id tid = std::this_thread::get_id();
+  (*state_map_)[tid] = st;
+}
+
+void FS::ImageServer::parse_frame_id_(char * data, FrameReadState * rs)
+{
+  uint i;
+  for (i = 0; i < rs->length; i++) {
+    rs->header[rs->header_pos] = data[i];
+    rs->header_pos++;
+    if (rs->header_pos == HEADER_LEN) {
+      set_state_(reading_data);
+      i++;
+      break;
+    }
+  }
+  rs->data_index += i;
+}
+
+void FS::ImageServer::process_ping_(tcp::socket& sock)
+{
+  const char * data = "\002PONG PING\003";
+    //    "\002PING FocusStacking ImageServer version 0.1 \n"
+    //"Database: 123e4567e89b12d3a452426655440000\003";
+  size_t length = std::strlen(data);
+  boost::asio::write(sock, boost::asio::buffer(data, length));
+}
+
 
 // Using for not echo example
 void FS::ImageServer::session_(tcp::socket sock)
@@ -176,19 +208,34 @@ void FS::ImageServer::session_(tcp::socket sock)
   for(;;)
     {
       char data[max_msg_len];
+      FrameReadState read_state;
 
       boost::system::error_code error;
-      size_t length = sock.read_some(boost::asio::buffer(data), error);
-      std::cout << "Read " << length << " bytes from client" << std::endl;
+      read_state.length = sock.read_some(
+			     boost::asio::buffer(data, max_msg_len),
+			     error);
+      std::cout << "Read " << read_state.length <<
+	" bytes from client" << std::endl;
       if (error == boost::asio::error::eof)
 	break; // Connection closed cleanly by peer.
-      else if (error)
-    
+      else if (error)    
 	throw boost::system::system_error(error); // Some other error.
 
-      if (get_state_() == waiting_for_start) {
-	detect_start_msg_(data, length);
-	
+      while (read_state.data_index != read_state.length) {
+      	
+	switch(get_state_())
+	  {
+	  case waiting_for_start:
+	    detect_start_msg_(data, &read_state);
+	    break;
+	  case reading_header:
+	    parse_frame_id_(data, &read_state);
+	    break;
+	  case reading_data:
+	    process_ping_(sock);
+	    break;
+	  }
+      
       }
       //boost::asio::write(sock, boost::asio::buffer(data, length));
 	
@@ -202,15 +249,26 @@ void FS::ImageServer::server_(boost::asio::io_service& io_service,
   tcp::acceptor a(io_service, tcp::endpoint(tcp::v4(), port));
   for (;;)
   {
-    tcp::socket sock(io_service);
-    a.accept(sock);
-    // starting a new thread here
-    std::thread(session_, std::move(sock)).detach();
+    //try {
+      tcp::socket sock(io_service);
+      a.accept(sock);
+      // starting a new thread here
+      std::thread(session_, std::move(sock)).detach();
+      //} catch()
   }
 }
 
-void FS::ImageServer::detect_start_msg_(char * data, size_t length)
+void FS::ImageServer::detect_start_msg_(char * data, FrameReadState *rs)
 {
-
+  uint i;
+  for (i = 0; i < rs->length; i++) {
+    if (data[i] == '\002') {
+      set_state_(reading_header);
+      rs->header_pos = 0;
+      i++;
+      break;
+    }
+  }
+  rs->data_index += i;
 }
 

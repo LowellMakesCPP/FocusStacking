@@ -1,4 +1,5 @@
 #include <iostream>
+#include <boost/exception/all.hpp>
 #include "ImageServer.h"
 
 #define STR_EXPAND(tok) #tok
@@ -40,6 +41,11 @@ int main(int argc, char ** argv) {
     catch (std::exception& e)
       {
 	std::cerr << "Exception: " << e.what() << "\n";
+      }
+    catch (boost::exception& e)
+      {
+	std::cerr << "Boost Exception: " << std::endl;
+	std::cerr << diagnostic_information(e);
       }
 
     return 0;

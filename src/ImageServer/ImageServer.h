@@ -62,11 +62,27 @@ namespace LMFocusStack {
 		enum state_t { waiting_for_start,
 	                       reading_header,
 	                       reading_data};
+		
+		// define the size of header
+		const static uint HEADER_LEN = 4;
+		
+		struct FrameReadState {
+		  uint data_index = 0;
+		  uint header_pos = 0;
+		  char header[HEADER_LEN];
+		  size_t length;
+		};
 
 		static std::map<std::thread::id, state_t> * state_map_;
-		void detect_start_msg_(char *, size_t length);
+		static void detect_start_msg_(char * data,
+					      FrameReadState *);
+		static void parse_frame_id_(char * data,
+					   FrameReadState *);
 
-		state_t get_state_();
+		static void process_ping_(boost::asio::ip::tcp::socket&);
+
+		static state_t get_state_();
+		static void set_state_(state_t);
 		
 	};
 

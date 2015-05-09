@@ -127,9 +127,6 @@ void FS::ImageServer::create_default_settings() {
 	fout.close();
 }
 
-/* TODO: review blocking_tcp_echo_server.cpp and add echo server
-         methods to interface with ping client example.
-*/
 std::map<std::thread::id, FS::ImageServer::state_t> * 
 	FS::ImageServer::state_map_
 	= new std::map<std::thread::id, FS::ImageServer::state_t>();
@@ -145,8 +142,8 @@ void FS::ImageServer::session_(tcp::socket sock)
       char data[max_msg_len];
 
       boost::system::error_code error;
-      std::cout << "Waiting to read some bytes from client" << std::endl;
       size_t length = sock.read_some(boost::asio::buffer(data), error);
+      std::cout << "Read " << length << " bytes from client" << std::endl;
       if (error == boost::asio::error::eof)
 	break; // Connection closed cleanly by peer.
       else if (error)

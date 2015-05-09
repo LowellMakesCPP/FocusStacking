@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
     bool start_found = false;
     bool end_found = false;
     std::string rs;
-    //while ( ! end_found ) {
+    while ( ! end_found ) {
     	size_t reply_length = boost::asio::read(s,
         boost::asio::buffer(reply, request_length));
 	rs += parse_ping_reply(reply, reply_length, 
@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
 		<< "Found: " << rs 
 		<< " Start: " << start_found 
 		<< " End: " << end_found << std::endl;
-    //}
+	}
     std::cout << rs << "\n";
   }
   catch (std::exception& e)

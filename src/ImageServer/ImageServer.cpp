@@ -186,13 +186,42 @@ void FS::ImageServer::parse_frame_id_(char * data, FrameReadState * rs)
   rs->data_index += i;
 }
 
+std::string FS::ImageServer::settings_path_ = "";
+
 void FS::ImageServer::process_ping_(tcp::socket& sock)
 {
-  const char * data = "\002PONG PING\003";
-    //    "\002PING FocusStacking ImageServer version 0.1 \n"
-    //"Database: 123e4567e89b12d3a452426655440000\003";
+  const char * data = //"\002PONG PING\003";
+        "\002PING FocusStacking ImageServer version 0.1 \n"
+    "Database: 123e4567e89b12d3a452426655440000\003";
   size_t length = std::strlen(data);
   boost::asio::write(sock, boost::asio::buffer(data, length));
+  // reset the state to process the next input
+  set_state_(waiting_for_start);
+}
+
+void FS::ImageServer::create_new_stack_(tcp::socket& sock)
+{
+  //const 
+  const char * data = //"\002PONG PING\003";
+        "\002PING FocusStacking ImageServer version 0.1 \n"
+    "Database: 123e4567e89b12d3a452426655440000\003";
+  size_t length = std::strlen(data);
+  boost::asio::write(sock, boost::asio::buffer(data, length));
+  // reset the state to process the next input
+  set_state_(waiting_for_start);
+}
+
+
+
+void FS::ImageServer::db_logic_(boost::asio::ip::tcp::socket& sock,
+				FrameReadState * rs)
+{
+  std::string sHead;
+  for(size_t i = 0; i < HEADER_LEN; i++) sHead += rs->header[i];
+  if (sHead == "PING")
+    process_ping_(sock);
+  else if (sHead == "GTID")
+    create_new_stack_(sock);
 }
 
 
@@ -233,7 +262,7 @@ void FS::ImageServer::session_(tcp::socket sock)
 	    parse_frame_id_(data, &read_state);
 	    break;
 	  case reading_data:
-	    process_ping_(sock);
+	    db_logic_(sock, &read_state);
 	    break;
 	  }
       

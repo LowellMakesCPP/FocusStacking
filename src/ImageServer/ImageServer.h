@@ -79,8 +79,15 @@ namespace LMFocusStack {
 		static void parse_frame_id_(char * data,
 					   FrameReadState *);
 
+		// Handle database logic (using file system)
+
 		static void db_logic_(boost::asio::ip::tcp::socket&,
 				      FrameReadState *);
+
+		static int read_settings_();
+		static void process_db_();
+
+		
 		// PING
 		static void
 		  process_ping_(boost::asio::ip::tcp::socket&);

@@ -186,7 +186,69 @@ void FS::ImageServer::parse_frame_id_(char * data, FrameReadState * rs)
   rs->data_index += i;
 }
 
-std::string FS::ImageServer::settings_path_ = "";
+using namespace std;
+int FS::ImageServer::read_settings_()
+{
+  cout << "Start of read_settings_" << endl;
+  string line;
+  // Currently unable to open settings file
+  ifstream settingsfile (settings_path_, ios::in);
+  cout << "Status of settings file: " << settingsfile.is_open() << endl;
+  
+  //settingsfile.open();
+  if (false)
+  //if (settingsfile.is_open())
+    {
+      while ( getline(settingsfile, line) )
+	{
+	  cout << line << endl;
+	}
+      settingsfile.close();
+    }
+
+  else cout << "Unable to open file." << endl;
+
+  return 0;
+}
+
+using namespace boost::filesystem;
+void FS::ImageServer::process_db_()
+/* According to DatabaseFormat.md, we need to: 
+ * 1) read the settings file (.ini),
+ * 2) create or update a meta-information file describing the data
+ * 3) create or update a UUID file containing the db unique ID
+ * 4) create or update a folder for each stack in the db
+ * 5) Ensure that the stack's folder equals the stack's UUID
+ */
+{
+  std::cout << "process_db_ method called" << std::endl;
+  std::cout << "Settings file exists: " << settings_path_ << std::endl;
+
+  // If a settings_path isn't given then use the /tmp/ directory
+  // Assuming linux environment.
+  current_path("/tmp/");
+  std::cout << "Working directory: " << current_path() << std::endl;
+  
+  if (exists(current_path()))
+    {
+      if (is_directory("FSImSrvDb"))
+	{
+	  std::cout << "Yes FSImSrvDb is a directory in /tmp/" <<
+	    std:: endl <<
+	    "File size in folder: " << file_size("FSImSrvDb/uuid")
+	    << std::endl;
+	  //create_directory("FSImSrvDb/testing");
+	  //std::cout << "New directory created: " <<
+	  //  is_directory("FSImSrvDb/testing") << std::endl;
+	    
+	}
+      else std::cout << "No FSImSrvDb is not a directory";
+    }
+    
+}
+
+std::string FS::ImageServer::settings_path_ =
+	       "/home/tbonza/projects/FocusStacking/src/ImageServer/FStk.ini";
 
 void FS::ImageServer::process_ping_(tcp::socket& sock)
 {
@@ -201,6 +263,7 @@ void FS::ImageServer::process_ping_(tcp::socket& sock)
 
 void FS::ImageServer::create_new_stack_(tcp::socket& sock)
 {
+  
   //const 
   const char * data = //"\002PONG PING\003";
         "\002PING FocusStacking ImageServer version 0.1 \n"
@@ -246,6 +309,14 @@ void FS::ImageServer::session_(tcp::socket sock)
 			     error);
       std::cout << "Read " << read_state.length <<
 	" bytes from client" << std::endl;
+      
+      
+      // testing process_db_() and read_settings_(),
+      // not being called anywhere else. 
+      std::cout << "Processing ping, testing database" << std::endl;
+      process_db_();
+      read_settings_();
+      
       if (error == boost::asio::error::eof)
 	break; // Connection closed cleanly by peer.
       else if (error)    

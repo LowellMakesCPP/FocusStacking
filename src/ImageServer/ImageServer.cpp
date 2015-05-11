@@ -192,22 +192,10 @@ int FS::ImageServer::read_settings_()
   cout << "Start of read_settings_" << endl;
   string line;
   // Currently unable to open settings file
-  ifstream settingsfile (settings_path_, ios::in);
-  cout << "Status of settings file: " << settingsfile.is_open() << endl;
+  ifstream settingsfile (settings_path_);
+
+  cout << settingsfile << endl;
   
-  //settingsfile.open();
-  if (false)
-  //if (settingsfile.is_open())
-    {
-      while ( getline(settingsfile, line) )
-	{
-	  cout << line << endl;
-	}
-      settingsfile.close();
-    }
-
-  else cout << "Unable to open file." << endl;
-
   return 0;
 }
 

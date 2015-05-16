@@ -6,6 +6,7 @@
 #include <map>
 #include <vector>
 #include <boost/asio.hpp>
+#include <boost/property_tree/ptree.hpp>
 
 /*! \file ImageServer.h
  *
@@ -54,7 +55,9 @@ namespace LMFocusStack {
 		void create_default_settings();
 
 		// parse tcp/ip from echo client
-		static void session_(boost::asio::ip::tcp::socket);
+		
+		static void session_(boost::asio::ip::tcp::socket,
+				     boost::property_tree::ptree&);
 
 		void server_(boost::asio::io_service&,
 	                     unsigned short port);
@@ -84,8 +87,8 @@ namespace LMFocusStack {
 		static void db_logic_(boost::asio::ip::tcp::socket&,
 				      FrameReadState *);
 
-		static int read_settings_();
-		static void process_db_();
+		static void read_settings_();
+		static void process_db_(boost::property_tree::ptree&);
 
 		
 		// PING

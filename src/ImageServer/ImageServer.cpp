@@ -193,15 +193,17 @@ void FS::ImageServer::parse_frame_id_(char * data, FrameReadState * rs)
 
 
 using namespace boost::property_tree;
-int FS::ImageServer::read_settings_()
+void FS::ImageServer::read_settings_()
 {
   std::cout << "Start of read_settings_" << std::endl;
 
   
   try {
     ptree pt;
-    //ini_parser::read_ini("/home/tbonza/projects/FocusStacking/src/ImageServer/FStk.ini", pt);
     ini_parser::read_ini(settings_path_, pt);
+    process_db_( pt );
+    
+    
     std::cout << pt.get<std::string>
       ("Network.working_directory") <<std::endl;
     std::cout << pt.get<std::string>
@@ -215,14 +217,14 @@ int FS::ImageServer::read_settings_()
     std::cout << "Could not read: " << settings_path_ << std::endl;
   }
   
-  
-  return 0;
 }
 
+using namespace boost::property_tree;
 using namespace boost::filesystem;
-void FS::ImageServer::process_db_()
+void FS::ImageServer::process_db_(ptree &pt)
 /* According to DatabaseFormat.md, we need to: 
  * 1) read the settings file (.ini),
+ * 1b) create or update a database directory
  * 2) create or update a meta-information file describing the data
  * 3) create or update a UUID file containing the db unique ID
  * 4) create or update a folder for each stack in the db
@@ -230,6 +232,10 @@ void FS::ImageServer::process_db_()
  */
 {
   std::cout << "process_db_ method called" << std::endl;
+  std::cout << "Hot damn, we've got: " << pt.get<std::string>
+      ("Network.port") << std::endl;
+
+  
   std::cout << "Settings file exists: " << settings_path_ << std::endl;
 
   // If a settings_path isn't given then use the /tmp/ directory
@@ -297,7 +303,9 @@ void FS::ImageServer::db_logic_(boost::asio::ip::tcp::socket& sock,
 
 
 // Using for not echo example
-void FS::ImageServer::session_(tcp::socket sock)
+using namespace boost::property_tree;
+void FS::ImageServer::session_(tcp::socket sock,
+			       ptree& pt)
 {
   try {
   // get id for the current thread
@@ -322,7 +330,7 @@ void FS::ImageServer::session_(tcp::socket sock)
       // testing process_db_() and read_settings_(),
       // not being called anywhere else. 
       std::cout << "Processing ping, testing database" << std::endl;
-      process_db_();
+      process_db_( pt );
       read_settings_();
       
       if (error == boost::asio::error::eof)

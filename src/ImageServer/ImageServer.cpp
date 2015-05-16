@@ -11,7 +11,6 @@
 #include <boost/asio.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
-//#include <boost/property_tree/json_parser.hpp>
 // #include <boost/thread/thread.hpp>
 #include <thread>
 
@@ -201,9 +200,8 @@ int FS::ImageServer::read_settings_()
   
   try {
     ptree pt;
-    ini_parser::read_ini("/home/tbonza/projects/FocusStacking/src/ImageServer/FStk.ini", pt);
-    //ini_parser::read_ini(settings_path_, pt);
-    //json_parser::read_json("/home/tbonza/projects/FocusStacking/src/ImageServer/FStk.json", pt);
+    //ini_parser::read_ini("/home/tbonza/projects/FocusStacking/src/ImageServer/FStk.ini", pt);
+    ini_parser::read_ini(settings_path_, pt);
     std::cout << pt.get<std::string>
       ("Network.working_directory") <<std::endl;
     std::cout << pt.get<std::string>
@@ -257,8 +255,7 @@ void FS::ImageServer::process_db_()
     
 }
 
-std::string FS::ImageServer::settings_path_ =
-	       "/home/tbonza/projects/FocusStacking/src/ImageServer/FStk.ini";
+std::string FS::ImageServer::settings_path_;
 // Referencing: https://code.google.com/p/minini/wiki/INI_File_Syntax
 
 void FS::ImageServer::process_ping_(tcp::socket& sock)

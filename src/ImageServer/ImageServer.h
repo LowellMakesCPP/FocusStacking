@@ -40,7 +40,7 @@ namespace LMFocusStack {
 	private:
 		static std::string settings_path_; // settings path
 		const char * def_settings_ = "FStk.ini";
-
+		
 		// database path, note that it is initialized to empty
 		std::string db_path_;
 		unsigned short port_ = 8080; // tcp/ip port number

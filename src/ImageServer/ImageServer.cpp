@@ -9,6 +9,9 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/regex.hpp>
 #include <boost/asio.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
+//#include <boost/property_tree/json_parser.hpp>
 // #include <boost/thread/thread.hpp>
 #include <thread>
 
@@ -124,6 +127,9 @@ void FS::ImageServer::create_default_settings() {
 		"; " << to_simple_string(now) << std::endl <<
 		"database = FSImSrvDb\n"
 	  "port = 8080\n";
+
+	std::cout << "create_default_settings() called" << std::endl <<
+	  "settings file created: " << settings_path_ << std::endl;
 	
 
 	fout.close();
@@ -186,15 +192,31 @@ void FS::ImageServer::parse_frame_id_(char * data, FrameReadState * rs)
   rs->data_index += i;
 }
 
-using namespace std;
+
+using namespace boost::property_tree;
 int FS::ImageServer::read_settings_()
 {
-  cout << "Start of read_settings_" << endl;
-  string line;
-  // Currently unable to open settings file
-  ifstream settingsfile (settings_path_);
+  std::cout << "Start of read_settings_" << std::endl;
 
-  cout << settingsfile << endl;
+  
+  try {
+    ptree pt;
+    ini_parser::read_ini("/home/tbonza/projects/FocusStacking/src/ImageServer/FStk.ini", pt);
+    //ini_parser::read_ini(settings_path_, pt);
+    //json_parser::read_json("/home/tbonza/projects/FocusStacking/src/ImageServer/FStk.json", pt);
+    std::cout << pt.get<std::string>
+      ("Network.working_directory") <<std::endl;
+    std::cout << pt.get<std::string>
+      ("Network.database") << std::endl;
+    std::cout << pt.get<std::string>
+      ("Network.port") << std::endl;
+      
+      
+  }
+  catch(...){
+    std::cout << "Could not read: " << settings_path_ << std::endl;
+  }
+  
   
   return 0;
 }
@@ -230,13 +252,14 @@ void FS::ImageServer::process_db_()
 	  //  is_directory("FSImSrvDb/testing") << std::endl;
 	    
 	}
-      else std::cout << "No FSImSrvDb is not a directory";
+      else std::cout << "No FSImSrvDb is not a directory" << std::endl;
     }
     
 }
 
 std::string FS::ImageServer::settings_path_ =
 	       "/home/tbonza/projects/FocusStacking/src/ImageServer/FStk.ini";
+// Referencing: https://code.google.com/p/minini/wiki/INI_File_Syntax
 
 void FS::ImageServer::process_ping_(tcp::socket& sock)
 {

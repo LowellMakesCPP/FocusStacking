@@ -86,9 +86,10 @@ namespace LMFocusStack {
 		static void db_logic_(boost::asio::ip::tcp::socket&,
 				      FrameReadState *);
 
-		
 		static boost::property_tree::ptree
 		  read_settings_(boost::property_tree::ptree pt);
+		static void create_update_db_();
+		static void meta_info_();
 		static void process_db_();
 
 		

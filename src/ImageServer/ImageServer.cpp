@@ -194,6 +194,9 @@ void FS::ImageServer::parse_frame_id_(char * data, FrameReadState * rs)
 
 using namespace boost::property_tree;
 ptree FS::ImageServer::read_settings_(ptree pt)
+/* According to DatabaseFormat.md, we need to: 
+ * 1) read the settings file (.ini),
+ */
 {
   std::cout << "Start of read_settings_" << std::endl;
   
@@ -214,8 +217,26 @@ ptree FS::ImageServer::read_settings_(ptree pt)
   catch(...){
     std::cout << "Could not read: " << settings_path_ << std::endl;
 
+    // set default ini values here.
+
     return pt;
   }
+  
+}
+
+void FS::ImageServer::create_update_db_()
+/* According to DatabaseFormat.md, we need to:
+ * 1b) create or update a database directory
+ */
+{
+  
+}
+
+void FS::ImageServer::meta_info_()
+/* According to DatabaseFormat.md, we need to:
+ * 2) create or update a meta-information file describing the data
+ */
+{
   
 }
 
@@ -231,9 +252,6 @@ void FS::ImageServer::process_db_()
  * 5) Ensure that the stack's folder equals the stack's UUID
  */
 {
-  //std::cout << "process_db_ method called" << std::endl;
-  //std::cout << "Hot damn, we've got: " << pt.get<std::string>
-  //     ("Network.port") << std::endl;
 
   ptree pt;
   pt = read_settings_( pt ); // not sure if this is done correctly
@@ -245,23 +263,43 @@ void FS::ImageServer::process_db_()
 
   // If a settings_path isn't given then use the /tmp/ directory
   // Assuming linux environment.
-  current_path("/tmp/");
   std::cout << "Working directory: " << current_path() << std::endl;
   
+  std::string directory = "FSImSrvDb";
+  std::string dirpath =
+	pt.get<std::string>("Network.working_directory");
+  
+  // set current path before directory is created
+  current_path(dirpath);
+  
+    
   if (exists(current_path()))
     {
-      if (is_directory("FSImSrvDb"))
+      if (is_directory(directory))
 	{
-	  std::cout << "Yes FSImSrvDb is a directory in /tmp/" <<
-	    std:: endl <<
-	    "File size in folder: " << file_size("FSImSrvDb/uuid")
-	    << std::endl;
+	  //std::cout << "Yes FSImSrvDb is a directory in /tmp/" <<
+	  //  std:: endl <<
+	  //  "File size in folder: " << file_size("FSImSrvDb/uuid")
+	  //  << std::endl;
 	  //create_directory("FSImSrvDb/testing");
 	  //std::cout << "New directory created: " <<
 	  //  is_directory("FSImSrvDb/testing") << std::endl;
 	    
 	}
-      else std::cout << "No FSImSrvDb is not a directory" << std::endl;
+      else if (!is_directory(directory))
+	{
+	  // Attempt to get filepath from settings file.  
+	  create_directory(dirpath + directory);
+	}
+      else
+	{
+	  //std::cout << "No FSImSrvDb is not a directory" << std::endl;
+	  if (!is_directory(directory)){
+	    std::cout << "No FSImSrvDb is not a directory" << std::endl;
+	    //throw
+	    //  boost::system::system_error("No FSImSrvDb is not a directory");
+	  }
+	}
     }
     
 }

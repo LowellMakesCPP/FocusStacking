@@ -193,35 +193,35 @@ void FS::ImageServer::parse_frame_id_(char * data, FrameReadState * rs)
 
 
 using namespace boost::property_tree;
-void FS::ImageServer::read_settings_()
+ptree FS::ImageServer::read_settings_(ptree pt)
 {
   std::cout << "Start of read_settings_" << std::endl;
-
   
   try {
-    ptree pt;
-    ini_parser::read_ini(settings_path_, pt);
-    process_db_( pt );
     
+    ini_parser::read_ini(settings_path_, pt);
     
     std::cout << pt.get<std::string>
       ("Network.working_directory") <<std::endl;
     std::cout << pt.get<std::string>
       ("Network.database") << std::endl;
-    std::cout << pt.get<std::string>
-      ("Network.port") << std::endl;
-      
+    //std::cout << pt.get<std::string>
+    //  ("Network.port") << std::endl;
+
+    return pt;
       
   }
   catch(...){
     std::cout << "Could not read: " << settings_path_ << std::endl;
+
+    return pt;
   }
   
 }
 
 using namespace boost::property_tree;
 using namespace boost::filesystem;
-void FS::ImageServer::process_db_(ptree &pt)
+void FS::ImageServer::process_db_()
 /* According to DatabaseFormat.md, we need to: 
  * 1) read the settings file (.ini),
  * 1b) create or update a database directory
@@ -231,10 +231,15 @@ void FS::ImageServer::process_db_(ptree &pt)
  * 5) Ensure that the stack's folder equals the stack's UUID
  */
 {
-  std::cout << "process_db_ method called" << std::endl;
-  std::cout << "Hot damn, we've got: " << pt.get<std::string>
-      ("Network.port") << std::endl;
+  //std::cout << "process_db_ method called" << std::endl;
+  //std::cout << "Hot damn, we've got: " << pt.get<std::string>
+  //     ("Network.port") << std::endl;
 
+  ptree pt;
+  pt = read_settings_( pt ); // not sure if this is done correctly
+  
+  std::cout << pt.get<std::string>
+    ("Network.port") <<std::endl;
   
   std::cout << "Settings file exists: " << settings_path_ << std::endl;
 
@@ -303,9 +308,7 @@ void FS::ImageServer::db_logic_(boost::asio::ip::tcp::socket& sock,
 
 
 // Using for not echo example
-using namespace boost::property_tree;
-void FS::ImageServer::session_(tcp::socket sock,
-			       ptree& pt)
+void FS::ImageServer::session_(tcp::socket sock)
 {
   try {
   // get id for the current thread
@@ -330,8 +333,7 @@ void FS::ImageServer::session_(tcp::socket sock,
       // testing process_db_() and read_settings_(),
       // not being called anywhere else. 
       std::cout << "Processing ping, testing database" << std::endl;
-      process_db_( pt );
-      read_settings_();
+      process_db_();
       
       if (error == boost::asio::error::eof)
 	break; // Connection closed cleanly by peer.

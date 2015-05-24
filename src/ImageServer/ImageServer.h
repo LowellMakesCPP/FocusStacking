@@ -56,8 +56,7 @@ namespace LMFocusStack {
 
 		// parse tcp/ip from echo client
 		
-		static void session_(boost::asio::ip::tcp::socket,
-				     boost::property_tree::ptree&);
+		static void session_(boost::asio::ip::tcp::socket);
 
 		void server_(boost::asio::io_service&,
 	                     unsigned short port);
@@ -87,8 +86,10 @@ namespace LMFocusStack {
 		static void db_logic_(boost::asio::ip::tcp::socket&,
 				      FrameReadState *);
 
-		static void read_settings_();
-		static void process_db_(boost::property_tree::ptree&);
+		
+		static boost::property_tree::ptree
+		  read_settings_(boost::property_tree::ptree pt);
+		static void process_db_();
 
 		
 		// PING

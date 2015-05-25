@@ -7,6 +7,7 @@
 #include <vector>
 #include <boost/asio.hpp>
 #include <boost/property_tree/ptree.hpp>
+#include <boost/uuid/uuid.hpp>
 
 /*! \file ImageServer.h
  *
@@ -89,7 +90,9 @@ namespace LMFocusStack {
 		static boost::property_tree::ptree
 		  read_settings_(boost::property_tree::ptree pt);
 		static void create_update_db_();
+		
 		static void meta_info_();
+		static boost::uuids::uuid create_uuid_();
 		static void process_db_();
 
 		

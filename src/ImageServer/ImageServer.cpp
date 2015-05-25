@@ -5,14 +5,17 @@
 #include <string>
 #include <fstream>
 #include <assert.h>
+#include <thread>
 #include <boost/filesystem.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/regex.hpp>
 #include <boost/asio.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
-// #include <boost/thread/thread.hpp>
-#include <thread>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp> 
 
 #define STR_EXPAND(tok) #tok
 #define STR(tok) STR_EXPAND(tok)
@@ -224,35 +227,13 @@ ptree FS::ImageServer::read_settings_(ptree pt)
   
 }
 
+using namespace boost::property_tree;
+using namespace boost::filesystem;
 void FS::ImageServer::create_update_db_()
 /* According to DatabaseFormat.md, we need to:
  * 1b) create or update a database directory
  */
 {
-  
-}
-
-void FS::ImageServer::meta_info_()
-/* According to DatabaseFormat.md, we need to:
- * 2) create or update a meta-information file describing the data
- */
-{
-  
-}
-
-using namespace boost::property_tree;
-using namespace boost::filesystem;
-void FS::ImageServer::process_db_()
-/* According to DatabaseFormat.md, we need to: 
- * 1) read the settings file (.ini),
- * 1b) create or update a database directory
- * 2) create or update a meta-information file describing the data
- * 3) create or update a UUID file containing the db unique ID
- * 4) create or update a folder for each stack in the db
- * 5) Ensure that the stack's folder equals the stack's UUID
- */
-{
-
   ptree pt;
   pt = read_settings_( pt ); // not sure if this is done correctly
   
@@ -301,6 +282,71 @@ void FS::ImageServer::process_db_()
 	  }
 	}
     }
+}
+
+using namespace boost::uuids;
+uuid FS::ImageServer::create_uuid_()
+  /* According to DatabaseFormat.md, we need to:
+   * 3) create or update a UUID file containing the db unique ID
+   */
+{
+  
+  uuid new_one = random_generator()();
+  //std::cout << "New uuid: " << new_one << std::endl;
+  
+  return new_one;
+}
+
+using namespace boost::uuids;
+using namespace boost::property_tree;
+using namespace boost::filesystem;
+void FS::ImageServer::meta_info_()
+/* According to DatabaseFormat.md, we need to:
+ * 2) create or update a meta-information file describing the data
+ */
+{
+  ptree pt;
+
+  // would have preferred to put this in the header file
+  std::string meta_file_ = "FSImSrvDb/meta_file.json";
+
+  // come back to this once the uuid is created. You can use
+  // that as the child then put a bunch of info below it.
+  if (exists(meta_file_))
+    {
+      // update meta_file_
+      std::cout << "meta info exists" << std::endl;
+    }
+  else
+    {
+      uuid new_uuid = create_uuid_();
+      
+      pt.put("meta.info","Meta Information for Database");
+      pt.put("meta.uuid", new_uuid);
+      boost::property_tree::write_json(meta_file_, pt);
+      std::cout << "meta info not exists" << std::endl;
+    }
+}
+
+void FS::ImageServer::process_db_()
+/* According to DatabaseFormat.md, we need to: 
+ * 1) read the settings file (.ini),
+ * 1b) create or update a database directory
+ * 2) create or update a meta-information file describing the data
+ * 3) create or update a UUID file containing the db unique ID
+ * 4) create or update a folder for each stack in the db
+ * 5) Ensure that the stack's folder equals the stack's UUID
+ */
+{
+  // step 1b
+  create_update_db_();
+
+  // step 2
+  meta_info_();
+
+  // step 3
+  create_uuid_();
+
     
 }
 

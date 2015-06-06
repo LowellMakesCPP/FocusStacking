@@ -181,6 +181,7 @@ void FS::ImageServer::set_state_(state_t st)
 
 void FS::ImageServer::parse_frame_id_(char * data, FrameReadState * rs)
 {
+  std::cout << "parsing header ..." << std::endl;
   uint i;
   for (i = 0; i < rs->length; i++) {
     rs->header[rs->header_pos] = data[i];
@@ -355,9 +356,10 @@ std::string FS::ImageServer::settings_path_;
 
 void FS::ImageServer::process_ping_(tcp::socket& sock)
 {
-  const char * data = //"\002PONG PING\003";
-        "\002PING FocusStacking ImageServer version 0.1 \n"
-    "Database: 123e4567e89b12d3a452426655440000\003";
+  std::cout << "processing PING..." << std::endl;
+  const char * data = "\002PONG PING\003";
+//        "\002PING FocusStacking ImageServer version 0.1 \n"
+//    "Database: 123e4567e89b12d3a452426655440000\003";
   size_t length = std::strlen(data);
   boost::asio::write(sock, boost::asio::buffer(data, length));
   // reset the state to process the next input
@@ -382,8 +384,12 @@ void FS::ImageServer::create_new_stack_(tcp::socket& sock)
 void FS::ImageServer::db_logic_(boost::asio::ip::tcp::socket& sock,
 				FrameReadState * rs)
 {
+  // read all data until complete frame has been read
+  //while (
+  std::cout << "processing data ..." << std::endl;
   std::string sHead;
   for(size_t i = 0; i < HEADER_LEN; i++) sHead += rs->header[i];
+  std::cout << "Header is " << sHead << std::endl;
   if (sHead == "PING")
     process_ping_(sock);
   else if (sHead == "GTID")
@@ -416,8 +422,8 @@ void FS::ImageServer::session_(tcp::socket sock)
       
       // testing process_db_() and read_settings_(),
       // not being called anywhere else. 
-      std::cout << "Processing ping, testing database" << std::endl;
-      process_db_();
+      //std::cout << "Processing ping, testing database" << std::endl;
+      //process_db_();
       
       if (error == boost::asio::error::eof)
 	break; // Connection closed cleanly by peer.

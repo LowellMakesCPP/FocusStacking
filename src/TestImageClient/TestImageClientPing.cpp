@@ -26,6 +26,7 @@ parse_ping_reply (char * reply, size_t reply_length,
 		}
 		s += reply[i];
 	}
+	std::cout << "parsing reply " << s << std::endl;
 	return s;
 }
 

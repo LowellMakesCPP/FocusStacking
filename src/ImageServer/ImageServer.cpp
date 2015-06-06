@@ -183,7 +183,7 @@ void FS::ImageServer::parse_frame_id_(char * data, FrameReadState * rs)
 {
   std::cout << "parsing header ..." << std::endl;
   uint i;
-  for (i = 0; i < rs->length; i++) {
+  for (i = rs->data_index; i < rs->length; i++) {
     rs->header[rs->header_pos] = data[i];
     rs->header_pos++;
     if (rs->header_pos == HEADER_LEN) {
@@ -192,7 +192,7 @@ void FS::ImageServer::parse_frame_id_(char * data, FrameReadState * rs)
       break;
     }
   }
-  rs->data_index += i;
+  rs->data_index = i;
 }
 
 
@@ -362,6 +362,7 @@ void FS::ImageServer::process_ping_(tcp::socket& sock)
 //    "Database: 123e4567e89b12d3a452426655440000\003";
   size_t length = std::strlen(data);
   boost::asio::write(sock, boost::asio::buffer(data, length));
+  std::cout << "Wrote " << length << " characters." << std::endl;
   // reset the state to process the next input
   set_state_(waiting_for_start);
 }
@@ -388,7 +389,10 @@ void FS::ImageServer::db_logic_(boost::asio::ip::tcp::socket& sock,
   //while (
   std::cout << "processing data ..." << std::endl;
   std::string sHead;
-  for(size_t i = 0; i < HEADER_LEN; i++) sHead += rs->header[i];
+  for(size_t i = 0; i < HEADER_LEN; i++) {
+        std::cout << "rs->header[i] == " << rs->header[i] << std::endl;
+	sHead += rs->header[i];
+  }
   std::cout << "Header is " << sHead << std::endl;
   if (sHead == "PING")
     process_ping_(sock);
@@ -418,7 +422,6 @@ void FS::ImageServer::session_(tcp::socket sock)
 			     error);
       std::cout << "Read " << read_state.length <<
 	" bytes from client" << std::endl;
-      
       
       // testing process_db_() and read_settings_(),
       // not being called anywhere else. 
@@ -484,5 +487,6 @@ void FS::ImageServer::detect_start_msg_(char * data, FrameReadState *rs)
     }
   }
   rs->data_index += i;
+  std::cout << "Start of frame detected ..." << std::endl;
 }
 

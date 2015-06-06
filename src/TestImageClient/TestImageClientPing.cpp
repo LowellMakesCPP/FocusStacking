@@ -61,13 +61,13 @@ int main(int argc, char* argv[])
         boost::asio::buffer(reply, request_length));
 	rs += parse_ping_reply(reply, reply_length, 
 		start_found, end_found);
-	//std::cout << "Reply length is " << reply_length << std::endl;
+	std::cout << "Reply length is " << reply_length << std::endl;
 
 	}
-    //std::cout 
-    //  << "Found: " << rs 
-    //  << " Start: " << start_found 
-    //  << " End: " << end_found << std::endl;
+    std::cout 
+      << "Found: " << rs 
+      << " Start: " << start_found 
+      << " End: " << end_found << std::endl;
 
     // print out the ping 
     std::cout << rs << "\n";

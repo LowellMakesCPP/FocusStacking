@@ -363,6 +363,7 @@ void FS::ImageServer::process_ping_(tcp::socket& sock)
   size_t length = std::strlen(data);
   boost::asio::write(sock, boost::asio::buffer(data, length));
   std::cout << "Wrote " << length << " characters." << std::endl;
+  boost::asio::flush();
   // reset the state to process the next input
   set_state_(waiting_for_start);
 }

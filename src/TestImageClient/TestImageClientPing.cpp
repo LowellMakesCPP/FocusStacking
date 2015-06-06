@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
     std::string rs;
     while ( ! end_found ) {
     	size_t reply_length = boost::asio::read(s,
-        boost::asio::buffer(reply, request_length));
+        boost::asio::buffer(reply, 1));
 	rs += parse_ping_reply(reply, reply_length, 
 		start_found, end_found);
 	std::cout << "Reply length is " << reply_length << std::endl;

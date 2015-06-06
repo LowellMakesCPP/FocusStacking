@@ -6,3 +6,4 @@
 /src/TestImageClient/TestImageClientPing
 *~
 /src/TestImageClient/TestImageClientPingRegression
+/src/ImageServer/ImageServerDb.o

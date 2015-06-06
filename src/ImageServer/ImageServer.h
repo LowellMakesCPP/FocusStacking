@@ -6,6 +6,8 @@
 #include <map>
 #include <vector>
 #include <boost/asio.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/uuid/uuid.hpp>
 
 /*! \file ImageServer.h
  *
@@ -40,7 +42,7 @@ namespace LMFocusStack {
 	private:
 		static std::string settings_path_; // settings path
 		const char * def_settings_ = "FStk.ini";
-
+		
 		// database path, note that it is initialized to empty
 		std::string db_path_;
 		unsigned short port_ = 8080; // tcp/ip port number
@@ -54,6 +56,7 @@ namespace LMFocusStack {
 		void create_default_settings();
 
 		// parse tcp/ip from echo client
+		
 		static void session_(boost::asio::ip::tcp::socket);
 
 		void server_(boost::asio::io_service&,
@@ -79,8 +82,20 @@ namespace LMFocusStack {
 		static void parse_frame_id_(char * data,
 					   FrameReadState *);
 
+		// Handle database logic (using file system)
+
 		static void db_logic_(boost::asio::ip::tcp::socket&,
 				      FrameReadState *);
+
+		static boost::property_tree::ptree
+		  read_settings_(boost::property_tree::ptree pt);
+		static void create_update_db_();
+		
+		static void meta_info_();
+		static boost::uuids::uuid create_uuid_();
+		static void process_db_();
+
+		
 		// PING
 		static void
 		  process_ping_(boost::asio::ip::tcp::socket&);

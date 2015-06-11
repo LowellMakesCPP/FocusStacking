@@ -1,0 +1,25 @@
+BOOST = /usr/local/Cellar/boost/1.57.0/include/
+BOOSTLIB = /usr/local/Cellar/boost/1.57.0/lib/
+
+CC = g++
+CFLAGS = -g -Wall -std=c++11
+CFLAGS += -I$(BOOST) -L$(BOOSTLIB) -pthread -lboost_system 
+# CFLAGS += -lboost_system -lboost_filesystem -lboost_date_time
+# CFLAGS += -lboost_regex -pthread
+
+all: TestImageClient TestImageClientPing TestImageClientPingRegression
+
+clean:
+	rm TestImageClient TestImageClientPing TestImageClientPingRegression
+
+TestImageClient: TestImageClient.cpp
+	$(CC) $(CFLAGS) TestImageClient.cpp -o TestImageClient
+
+TestImageClientPing: TestImageClientPing.cpp
+	$(CC) $(CFLAGS) TestImageClientPing.cpp -o TestImageClientPing
+
+TestImageClientPingRegression: TestImageClientPingRegression.cpp
+	$(CC) $(CFLAGS) TestImageClientPingRegression.cpp -o \
+	TestImageClientPingRegression
+
+

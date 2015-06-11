@@ -90,6 +90,8 @@ namespace LMFocusStack {
 		static boost::property_tree::ptree
 		  read_settings_(boost::property_tree::ptree pt);
 		static void create_update_db_();
+		void create_db_ifmissing_();
+		void create_db_();
 		
 		static void meta_info_();
 		static boost::uuids::uuid create_uuid_();

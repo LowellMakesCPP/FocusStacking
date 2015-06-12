@@ -13,3 +13,5 @@ src/TestImageClient/TestImageClientPing.dSYM/Contents/Resources/DWARF/TestImageC
 
 src/TestImageClient/TestImageClientPingRegression.dSYM/Contents/Resources/DWARF/TestImageClientPingRegression
 /src/ImageServer/ImageServerDb.o
+
+*.orig
